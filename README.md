@@ -7,22 +7,22 @@
 
 ![Admin Panel Preview](public/admin-preview.png) <!-- Add your screenshot path here -->
 
-**Admin Panel Preview**
+# Admin Panel Preview
 
 
 ![Admin Panel Preview](public/dashboard.png) <!-- Add your screenshot path here -->
 
-**Dashboard**
+# Dashboard
 
 
 ![Admin Panel Preview](public/Analytics.png) <!-- Add your screenshot path here -->
 
-**Analytics**
+# Analytics
 
 
 ![Admin Panel Preview](public/product.png) <!-- Add your screenshot path here -->
 
-**product management**
+# product management
 
 
 
