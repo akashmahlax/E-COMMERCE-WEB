@@ -1,132 +1,45 @@
-"use client"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import ProductCard from "@/components/ProductCard"
+import clientPromise from "@/lib/mongodb"
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-} from "recharts"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-interface DashboardData {
-  totalRevenue: number
-  orders: number
-  customers: number
-  conversionRate: number
-  salesData: { name: string; sales: number }[]
-  visitorData: { name: string; visitors: number }[]
+
+async function getLatestProducts() {
+  const client = await clientPromise
+  const db = client.db("ecommerce")
+  const products = await db.collection("products").find().sort({ _id: -1 }).limit(6).toArray()
+  return JSON.parse(JSON.stringify(products))
 }
 
-export default function AdminDashboard() {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null)
-
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      const response = await fetch("/api/dashboard")
-      const data = await response.json()
-      setDashboardData(data)
-    }
-
-    fetchDashboardData()
-  }, [])
-
-  if (!dashboardData) {
-    return <div>Loading...</div>
-  }
+export default async function Home() {
+  const latestProducts = await getLatestProducts()
 
   return (
-    <div>
-      <h1 className="text-3xl text-blue-500 font-bold mb-6">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Revenue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl text-green-500 font-bold">${dashboardData.totalRevenue.toLocaleString()}</p>
-            <p className="text-sm text-muted-foreground">+12.5% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Orders</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{dashboardData.orders}</p>
-            <p className="text-sm text-muted-foreground">+5.2% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Customers</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{dashboardData.customers.toLocaleString()}</p>
-            <p className="text-sm text-muted-foreground">+3.1% from last month</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Conversion Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{dashboardData.conversionRate}%</p>
-            <p className="text-sm text-muted-foreground">+0.5% from last month</p>
-          </CardContent>
-        </Card>
-      </div>
-      <Tabs defaultValue="sales">
-        <TabsList>
-          <TabsTrigger value="sales">Sales Overview</TabsTrigger>
-          <TabsTrigger value="visitors">Visitor Analytics</TabsTrigger>
-        </TabsList>
-        <TabsContent value="sales">
-          <Card>
-            <CardHeader>
-              <CardTitle>Monthly Sales</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={dashboardData.salesData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="sales" fill="#8884d8" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="visitors">
-          <Card>
-            <CardHeader>
-              <CardTitle>Weekly Visitors</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={dashboardData.visitorData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="visitors" stroke="#82ca9d" />
-                </LineChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
+        <h1 className="text-6xl font-bold mt-14 mb-8">
+          Manage your products and more from <span className="text-blue-600">Admin Dashboard </span>
+       
+       
+        </h1>
+        <p className="mt-3 text-2xl mb-8">From here, you can <span className="text-blue-400">add</span>, <span className="text-green-400">edit</span>, and <span className="text-red-600">delete</span> products, manage orders, and view customer information.</p>
+        <p className="mt-3 text-2xl mb-8">You can also view the latest products below.</p>
+        <div className="flex mb-8">
+          <Link href="/products">
+            <Button>View All Product</Button>
+          </Link>
+          <Link href="/dashboard" className="ml-4 border-green-500">
+            <Button variant="outline" className="border-2 border-green-500 text-green-500 font-semibold hover:bg-green-500 hover:text-white">Go to Admin Panel</Button>
+          </Link>
+        </div>
+        <h2 className="text-3xl font-bold mb-4">Latest Products</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {latestProducts.map((product ) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      </main>
     </div>
   )
 }

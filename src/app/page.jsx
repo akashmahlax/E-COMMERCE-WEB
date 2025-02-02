@@ -24,7 +24,7 @@ export default async function Home() {
         <p className="mt-3 text-2xl mb-8">Shop the latest products with ease</p>
         <div className="flex mb-8">
           <Link href="/products">
-            <Button>View All Product</Button>
+            <Button>Shop Now !</Button>
           </Link>
           <Link href="/admin" className="ml-4 border-green-500">
             <Button variant="outline" className="border-2 border-green-500 text-green-500 font-semibold hover:bg-green-500 hover:text-white">Admin Panel</Button>
