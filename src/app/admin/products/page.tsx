@@ -263,10 +263,11 @@ export default function AdminProducts() {
       <Pagination className="mt-4">
         <PaginationContent>
           <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            />
+            {currentPage > 1 && (
+              <PaginationPrevious
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              />
+            )}
           </PaginationItem>
           {Array.from({ length: totalPages }, (_, i) => (
             <PaginationItem key={i}>
@@ -277,8 +278,11 @@ export default function AdminProducts() {
           ))}
           <PaginationItem>
             <PaginationNext
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-              disabled={currentPage === totalPages}
+              onClick={() => {
+                if (currentPage < totalPages) {
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+              }}
             />
           </PaginationItem>
         </PaginationContent>

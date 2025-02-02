@@ -76,7 +76,9 @@ export default function AdminAnalytics() {
         <Button onClick={handleExportData}>Export Data</Button>
       </div>
       <div className="flex space-x-4 mb-6">
-        <DatePickerWithRange />
+        <DatePickerWithRange date={undefined} setDate={function (date: DateRange | undefined): void {
+          throw new Error("Function not implemented.")
+        } } />
         <Select value={frequency} onValueChange={setFrequency}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select frequency" />

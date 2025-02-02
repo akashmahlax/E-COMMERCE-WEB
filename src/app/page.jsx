@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button"
 import ProductCard from "@/components/ProductCard"
 import clientPromise from "@/lib/mongodb"
 
+
+
 async function getLatestProducts() {
   const client = await clientPromise
   const db = client.db("ecommerce")
@@ -30,7 +32,7 @@ export default async function Home() {
         </div>
         <h2 className="text-3xl font-bold mb-4">Latest Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {latestProducts.map((product) => (
+          {latestProducts.map((product ) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>

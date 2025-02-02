@@ -1,19 +1,29 @@
 import ProductCard from "@/components/ProductCard"
+import clientPromise from "@/lib/mongodb"
+import { Product } from "@/models/Product"
 
-// This would typically come from a database
-const products = [
-  { id: 1, name: "Product 1", price: 19.99, image: "/placeholder.svg" },
-  { id: 2, name: "Product 2", price: 29.99, image: "/placeholder.svg" },
-  { id: 3, name: "Product 3", price: 39.99, image: "/placeholder.svg" },
-]
 
-export default function ProductsPage() {
+
+
+async function getLatestProducts () {
+  const client = await clientPromise
+  const db = client.db("ecommerce")
+  const products = await db.collection("products").find().sort({ _id: -1 }).limit(6).toArray()
+  return JSON.parse(JSON.stringify(products))
+}
+
+
+
+export default async function ProductsPage() {
+
+  const latestProducts: Product[] = await getLatestProducts();
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6">Our Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {latestProducts.map((product) => (
+          <ProductCard key={product._id.toString()} product={{ ...product, _id: product._id.toString() }} />
         ))}
       </div>
     </div>
