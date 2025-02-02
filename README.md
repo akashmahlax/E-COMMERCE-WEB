@@ -5,22 +5,22 @@
 [![Prisma](https://img.shields.io/badge/ORM-Prisma-2D3748?style=flat&logo=prisma)](https://prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css)](https://tailwindcss.com/)
 
-![Admin Panel Preview](./admin/public/admin-preview.png) <!-- Add your screenshot path here -->
+![Admin Panel Preview](public/admin-preview.png) <!-- Add your screenshot path here -->
 
 **Admin Panel Preview**
 
 
-![Admin Panel Preview](./admin/public/dashboard.png) <!-- Add your screenshot path here -->
+![Admin Panel Preview](public/dashboard.png) <!-- Add your screenshot path here -->
 
 **Dashboard**
 
 
-![Admin Panel Preview](./admin/public/Analytics.png) <!-- Add your screenshot path here -->
+![Admin Panel Preview](public/Analytics.png) <!-- Add your screenshot path here -->
 
 **Analytics**
 
 
-![Admin Panel Preview](./admin/public/product.png) <!-- Add your screenshot path here -->
+![Admin Panel Preview](public/product.png) <!-- Add your screenshot path here -->
 
 **product management**
 
