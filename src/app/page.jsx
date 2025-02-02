@@ -24,10 +24,10 @@ export default async function Home() {
         <p className="mt-3 text-2xl mb-8">Shop the latest products with ease</p>
         <div className="flex mb-8">
           <Link href="/products">
-            <Button>Shop Now</Button>
+            <Button>View All Product</Button>
           </Link>
-          <Link href="/admin" className="ml-4">
-            <Button variant="outline">Admin Panel</Button>
+          <Link href="/admin" className="ml-4 border-green-500">
+            <Button variant="outline" className="border-2 border-green-500 text-green-500 font-semibold hover:bg-green-500 hover:text-white">Admin Panel</Button>
           </Link>
         </div>
         <h2 className="text-3xl font-bold mb-4">Latest Products</h2>
