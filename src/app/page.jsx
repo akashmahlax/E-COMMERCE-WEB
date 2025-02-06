@@ -1,7 +1,9 @@
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import ProductCard from "@/components/ProductCard"
 import clientPromise from "@/lib/mongodb"
+import AdminBtn from "@/components/adminbtn"
 
 
 
@@ -13,6 +15,7 @@ async function getLatestProducts() {
 }
 
 export default async function Home() {
+
   const latestProducts = await getLatestProducts()
 
   return (
@@ -26,9 +29,8 @@ export default async function Home() {
           <Link href="/products">
             <Button>Shop Now !</Button>
           </Link>
-          <Link href="/admin" className="ml-4 border-green-500">
-            <Button variant="outline" className="border-2 border-green-500 text-green-500 font-semibold hover:bg-green-500 hover:text-white">Admin Panel</Button>
-          </Link>
+          <AdminBtn/>
+          
         </div>
         <h2 className="text-3xl font-bold mb-4">Latest Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
