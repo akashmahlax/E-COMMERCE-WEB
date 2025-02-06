@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import ProductCard from "@/components/ProductCard"
 import clientPromise from "@/lib/mongodb"
 import AdminBtn from "@/components/adminbtn"
+import Footer from "@/components/ui/footer"
 
 
 
@@ -39,6 +40,7 @@ export default async function Home() {
           ))}
         </div>
       </main>
+      <Footer/>
     </div>
   )
 }
