@@ -29,7 +29,9 @@
 
 A feature-rich, modern e-commerce administration dashboard built with Next.js 13, designed for seamless management of online stores. Developed by **Akash Mahla**, a Next.js specialist.
 
-🔗 **Live Demo:** [www.Akash-Mahla.com](https://admin-six-khaki.vercel.app/) <!-- Add your Vercel URL -->
+🔗 **Live Demo:** [Only Demo on vercel](https://admin-six-khaki.vercel.app/) <!-- Add your Vercel URL --> 
+🔗 **Live Demo from Git on VERCEL:** [Live on Vercel from Git](https://admin-k9x2lcyhk-akash7.vercel.app/) <!-- Add your Vercel URL -->
+
 
 ## 🚀 Features
 
