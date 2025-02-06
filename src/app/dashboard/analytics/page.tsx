@@ -1,7 +1,23 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Tabs,
+  Tab,
+  Select,
+  MenuItem,
+  Grid,
+  TextField,
+} from "@mui/material";
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   BarChart,
   Bar,
@@ -9,139 +25,122 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
-  ResponsiveContainer,
   LineChart,
   Line,
   PieChart,
   Pie,
   Cell,
-} from "recharts"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DatePickerWithRange } from "@/components/ui/date-picker-with-range"
-import { addDays } from "date-fns"
-import type { DateRange } from "react-day-picker"
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 interface AnalyticsData {
-  totalRevenue: number
-  orders: number
-  customers: number
-  conversionRate: number
-  salesData: { name: string; sales: number }[]
-  visitorData: { name: string; visitors: number }[]
-  categoryData: { name: string; value: number }[]
+  totalRevenue: number;
+  orders: number;
+  customers: number;
+  conversionRate: number;
+  salesData: { name: string; sales: number }[];
+  visitorData: { name: string; visitors: number }[];
+  categoryData: { name: string; value: number }[];
 }
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"]
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function AdminAnalytics() {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  })
-  const [frequency, setFrequency] = useState("daily")
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([dayjs(), dayjs().add(7, "day")]);
+  const [frequency, setFrequency] = useState("daily");
+  const [tabValue, setTabValue] = useState(0);
 
   useEffect(() => {
-    fetchAnalyticsData()
-  }, [dateRange, frequency]) //This line was already correct.  The prompt incorrectly identified it as needing a fix.
+    fetchAnalyticsData();
+  }, [dateRange, frequency]);
 
   const fetchAnalyticsData = async () => {
     try {
       const response = await fetch(
-        `/api/analytics?from=${dateRange?.from?.toISOString()}&to=${dateRange?.to?.toISOString()}&frequency=${frequency}`,
-      )
-      if (!response.ok) throw new Error("Failed to fetch analytics data")
-      const data = await response.json()
-      setAnalyticsData(data)
+        `/api/analytics?from=${dateRange[0]?.toISOString()}&to=${dateRange[1]?.toISOString()}&frequency=${frequency}`
+      );
+      if (!response.ok) throw new Error("Failed to fetch analytics data");
+      const data = await response.json();
+      setAnalyticsData(data);
     } catch (error) {
-      console.error("Error fetching analytics data:", error)
+      console.error("Error fetching analytics data:", error);
     }
-  }
+  };
 
   const handleExportData = () => {
-    console.log("Exporting data...")
-  }
-
-  if (!analyticsData) {
-    return <div>Loading...</div>
-  }
+    console.log("Exporting data...");
+  };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Analytics</h1>
-        <Button onClick={handleExportData}>Export Data</Button>
-      </div>
-      <div className="flex space-x-4 mb-6">
-        <DatePickerWithRange date={undefined} setDate={function (date: DateRange | undefined): void {
-          throw new Error("Function not implemented.")
-        } } />
-        <Select value={frequency} onValueChange={setFrequency}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select frequency" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="daily">Daily</SelectItem>
-            <SelectItem value="weekly">Weekly</SelectItem>
-            <SelectItem value="monthly">Monthly</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Revenue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">${analyticsData.totalRevenue.toLocaleString()}</p>
-            <p className="text-sm text-muted-foreground">+12.5% from last period</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Orders</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{analyticsData.orders.toLocaleString()}</p>
-            <p className="text-sm text-muted-foreground">+5.2% from last period</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Customers</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{analyticsData.customers.toLocaleString()}</p>
-            <p className="text-sm text-muted-foreground">+3.1% from last period</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Conversion Rate</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-3xl font-bold">{analyticsData.conversionRate}%</p>
-            <p className="text-sm text-muted-foreground">+0.5% from last period</p>
-          </CardContent>
-        </Card>
-      </div>
-      <Tabs defaultValue="sales">
-        <TabsList>
-          <TabsTrigger value="sales">Sales Overview</TabsTrigger>
-          <TabsTrigger value="visitors">Visitor Analytics</TabsTrigger>
-          <TabsTrigger value="categories">Category Performance</TabsTrigger>
-        </TabsList>
-        <TabsContent value="sales">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sales Overview</CardTitle>
-            </CardHeader>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Box p={4}>
+        <Box display="flex" justifyContent="space-between" mb={4}>
+          <Typography variant="h4" fontWeight="bold">
+            Analytics
+          </Typography>
+          <Button variant="contained" color="primary" onClick={handleExportData}>
+            Export Data
+          </Button>
+        </Box>
+
+        <Box display="flex" gap={2} mb={4}>
+          <DatePicker
+            value={dateRange[0]}
+            onChange={(newValue) => setDateRange([newValue, dateRange[1]])}
+            label="Start Date"
+          />
+          <DatePicker
+            value={dateRange[1]}
+            onChange={(newValue) => setDateRange([dateRange[0], newValue])}
+            label="End Date"
+          />
+          <Select
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+            displayEmpty
+            variant="outlined"
+          >
+            <MenuItem value="daily">Daily</MenuItem>
+            <MenuItem value="weekly">Weekly</MenuItem>
+            <MenuItem value="monthly">Monthly</MenuItem>
+          </Select>
+        </Box>
+
+        <Grid container spacing={4} mb={4}>
+          {[
+            { title: "Total Revenue", value: `$${analyticsData?.totalRevenue.toLocaleString()}` },
+            { title: "Orders", value: analyticsData?.orders.toLocaleString() },
+            { title: "Customers", value: analyticsData?.customers.toLocaleString() },
+            { title: "Conversion Rate", value: `${analyticsData?.conversionRate}%` },
+          ].map((stat, idx) => (
+            <Grid item xs={12} md={3} key={idx}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">{stat.title}</Typography>
+                  <Typography variant="h4" fontWeight="bold">
+                    {stat.value}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    +X% from last period
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+
+        <Tabs value={tabValue} onChange={(_, newValue) => setTabValue(newValue)}>
+          <Tab label="Sales Overview" />
+          <Tab label="Visitor Analytics" />
+          <Tab label="Category Performance" />
+        </Tabs>
+        {tabValue === 0 && (
+          <Card sx={{ mt: 4 }}>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={analyticsData.salesData}>
+                <BarChart data={analyticsData?.salesData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -152,15 +151,13 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </TabsContent>
-        <TabsContent value="visitors">
-          <Card>
-            <CardHeader>
-              <CardTitle>Visitor Analytics</CardTitle>
-            </CardHeader>
+        )}
+
+        {tabValue === 1 && (
+          <Card sx={{ mt: 4 }}>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={analyticsData.visitorData}>
+                <LineChart data={analyticsData?.visitorData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
@@ -171,25 +168,22 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </TabsContent>
-        <TabsContent value="categories">
-          <Card>
-            <CardHeader>
-              <CardTitle>Category Performance</CardTitle>
-            </CardHeader>
+        )}
+
+        {tabValue === 2 && (
+          <Card sx={{ mt: 4 }}>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={analyticsData.categoryData}
+                    data={analyticsData?.categoryData}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
                     outerRadius={80}
-                    fill="#8884d8"
                     dataKey="value"
                   >
-                    {analyticsData.categoryData.map((entry, index) => (
+                    {analyticsData?.categoryData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -199,9 +193,8 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  )
+        )}
+      </Box>
+    </LocalizationProvider>
+  );
 }
-
