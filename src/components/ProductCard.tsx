@@ -13,7 +13,7 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Card>
+    <Card >
       <CardHeader>
         <CardTitle>{product.name}</CardTitle>
       </CardHeader>
@@ -27,13 +27,13 @@ export default function ProductCard({ product }: { product: Product }) {
                   alt={`${product.name} - Image ${index + 1}`}
                   width={300}
                   height={200}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-60 object-cotain"
                 />
               </CarouselItem>
             ))}
             {product.video && (
               <CarouselItem>
-                <video src={product.video} controls className="w-full h-48 object-cover" />
+                <video src={product.video} controls className="w-full h-60 object-cover" />
               </CarouselItem>
             )}
           </CarouselContent>
