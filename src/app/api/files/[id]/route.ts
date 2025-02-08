@@ -2,19 +2,19 @@ import { type NextRequest, NextResponse } from "next/server"
 import { GridFSBucket, ObjectId } from "mongodb"
 import clientPromise from "@/lib/mongodb"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
   try {
     const client = await clientPromise
     const db = client.db()
     const bucket = new GridFSBucket(db)
 
-    const file = await db.collection("fs.files").findOne({ _id: new ObjectId(params.id) })
+    const file = await db.collection("fs.files").findOne({ _id: new ObjectId(context.params.id) })
 
     if (!file) {
       return NextResponse.json({ error: "File not found" }, { status: 404 })
     }
 
-    const stream = bucket.openDownloadStream(new ObjectId(params.id))
+    const stream = bucket.openDownloadStream(new ObjectId(context.params.id))
 
     // Set appropriate headers
     const headers = new Headers()
