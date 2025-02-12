@@ -3,6 +3,7 @@ import Link from "next/link";
 import ProductCard from "@/components/ui/ProductCard";
 import AdminBtn from "@/components/adminbtn";
 import { ShoppingBag } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 // Force dynamic rendering since we're using a no-store fetch
 export const dynamic = "force-dynamic";
@@ -39,38 +40,9 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-300 flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <ShoppingBag size={32} className="text-blue-600" />
-            <h1 className="text-2xl font-bold text-blue-600">E-Shop</h1>
-          </div>
-          <nav className="space-x-4">
-            <Link href="/">
-              <span className="text-gray-700 hover:text-blue-600 transition">
-                Home
-              </span>
-            </Link>
-            <Link href="/products">
-              <span className="text-gray-700 hover:text-blue-600 transition">
-                Products
-              </span>
-            </Link>
-            <Link href="/about">
-              <span className="text-gray-700 hover:text-blue-600 transition">
-                About
-              </span>
-            </Link>
-            <Link href="/contact">
-              <span className="text-gray-700 hover:text-blue-600 transition">
-                Contact
-              </span>
-            </Link>
-          </nav>
-        </div>
-      </header>
+      <Navbar/>
 
       {/* Main Content */}
       <main className="container mx-auto flex-1 px-6 py-12">
