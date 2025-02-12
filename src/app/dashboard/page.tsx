@@ -1,6 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Progress } from "@/components/ui/progress"
+import { Box } from "@mui/material";
+import * as React from 'react';
+import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   BarChart,
@@ -39,7 +44,26 @@ export default function AdminDashboard() {
   }, [])
 
   if (!dashboardData) {
-    return <div>Loading...</div>
+    return <div>  
+      <Box
+      sx={{
+        height: '100vh', // full viewport height
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: '#f0f4f8', // a light background color
+      }}
+    >
+      <Stack spacing={4} direction="row">
+        <CircularProgress
+          sx={{ color: '#ff4081' }} // a vibrant pink
+          size={150}
+          thickness={4}
+        />
+       
+      </Stack>
+    </Box>
+  </div>
   }
 
   return (

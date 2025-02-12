@@ -1,47 +1,110 @@
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import ProductCard from "@/components/ui/ProductCard";
+import AdminBtn from "@/components/adminbtn";
+import { ShoppingBag } from "lucide-react";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import ProductCard from "@/components/ProductCard"
-import clientPromise from "@/lib/mongodb"
-import AdminBtn from "@/components/adminbtn"
-import Footer from "@/components/ui/footer"
+// Force dynamic rendering since we're using a no-store fetch
+export const dynamic = "force-dynamic";
 
-
-
-async function getLatestProducts() {
-  const client = await clientPromise
-  const db = client.db("ecommerce")
-  const products = await db.collection("products").find().sort({ _id: -1 }).limit(6).toArray()
-  return JSON.parse(JSON.stringify(products))
+async function getProducts() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/products`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch products: ${res.status} ${res.statusText}`
+      );
+    }
+    const data = await res.json();
+    console.log("Fetched products:", data); // Log the fetched data
+    return data;
+  } catch (error) {
+    console.error("Error in getProducts:", error);
+    throw error;
+  }
 }
 
 export default async function Home() {
+  let products;
+  let error;
 
-  const latestProducts = await getLatestProducts()
+  try {
+    products = await getProducts();
+  } catch (e) {
+    console.error("Error fetching products:", e);
+    error = "Failed to load products";
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold mb-8">
-          Welcome to our <span className="text-blue-600">E-commerce Store</span>
-        </h1>
-        <p className="mt-3 text-2xl mb-8">Shop the latest products with ease</p>
-        <div className="flex mb-8">
-          <Link href="/products">
-            <Button>Shop Now !</Button>
-          </Link>
-          <AdminBtn/>
-          
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header */}
+      <header className="bg-white shadow">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <ShoppingBag size={32} className="text-blue-600" />
+            <h1 className="text-2xl font-bold text-blue-600">E-Shop</h1>
+          </div>
+          <nav className="space-x-4">
+            <Link href="/">
+              <span className="text-gray-700 hover:text-blue-600 transition">
+                Home
+              </span>
+            </Link>
+            <Link href="/products">
+              <span className="text-gray-700 hover:text-blue-600 transition">
+                Products
+              </span>
+            </Link>
+            <Link href="/about">
+              <span className="text-gray-700 hover:text-blue-600 transition">
+                About
+              </span>
+            </Link>
+            <Link href="/contact">
+              <span className="text-gray-700 hover:text-blue-600 transition">
+                Contact
+              </span>
+            </Link>
+          </nav>
         </div>
-        <h2 className="text-3xl font-bold mb-4">Latest Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {latestProducts.map((product ) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      </main>
-      <Footer/>
-    </div>
-  )
-}
+      </header>
 
+      {/* Main Content */}
+      <main className="container mx-auto flex-1 px-6 py-12">
+        <div className="flex flex-col items-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            Welcome to our store
+          </h1>
+          <AdminBtn />
+        </div>
+        <h2 className="text-3xl font-bold text-gray-800 my-8 text-center">
+          Our Products
+        </h2>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {!products && !error && (
+          <p className="text-gray-600 text-center">Loading products...</p>
+        )}
+        {products && products.length === 0 && (
+          <p className="text-gray-600 text-center">No products available.</p>
+        )}
+        {products && products.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        )}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white shadow">
+        <div className="container mx-auto px-6 py-4 text-center text-gray-600">
+          &copy; {new Date().getFullYear()} E-Shop. All rights reserved.
+        </div>
+      </footer>
+    </div>
+  );
+}
