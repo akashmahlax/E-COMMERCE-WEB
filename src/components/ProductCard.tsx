@@ -20,7 +20,7 @@ export default function ProductCard({ product }: { product: Product }) {
       <CardContent>
         <Carousel>
           <CarouselContent>
-            {product.images.map((image, index) => (
+            {product.images?.map((image, index) => (
               <CarouselItem key={index}>
                 <Image
                   src={image || "/placeholder.svg"}

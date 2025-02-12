@@ -29,6 +29,9 @@ export default async function Home() {
           <Link href="/products">
             <Button>View All Product</Button>
           </Link>
+          <Link href="/admin/new" className="ml-4 border-green-500">
+            <Button>View New Product</Button>
+          </Link>
           <Link href="/dashboard" className="ml-4 border-green-500">
             <Button variant="outline" className="border-2 border-green-500 text-green-500 font-semibold hover:bg-green-500 hover:text-white">Go to Admin Panel</Button>
           </Link>
