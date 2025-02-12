@@ -31,6 +31,13 @@ const dashboardSidebar = () => {
           Products
         </Link>
         <Link
+          href="/dashboard/product"
+          className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
+        >
+          <Package className="inline-block mr-2" size={20} />
+          Product sipmle
+        </Link>
+        <Link
           href="/dashboard/orders"
           className="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white"
         >
