@@ -1,5 +1,3 @@
-// api endpoint: /api/products and /api/products/n are same but new1 not 
-
 import { NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import cloudinary from "@/lib/cloudinary";

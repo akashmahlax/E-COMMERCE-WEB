@@ -230,7 +230,7 @@ export default function AdminProducts() {
           <Button variant="secondary" onClick={() => router.push("/dashboard/customers")}>
             View Customers
           </Button>
-          <Button variant="secondary" onClick={() => router.push("/dashboard/products/new")}>
+          <Button variant="secondary" onClick={() => router.push("/admin/update/new")}>
             Add Product From Page
           </Button>
         </div>
