@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ProductCard from "@/components/ui/ProductCard";
+import ProductCard2 from "@/components/ui/p";
 
 // Force dynamic rendering since we're using a no-store fetch
 export const dynamic = "force-dynamic";
@@ -46,7 +47,7 @@ export default async function Home() {
       {products && products.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product: any) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard2 key={product._id} product={product} />
           ))}
         </div>
       )}
