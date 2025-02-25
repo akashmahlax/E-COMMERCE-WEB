@@ -1,73 +1,74 @@
+// app/loading.tsx
 "use client";
-import * as React from "react";
-import CircularProgress, { CircularProgressProps } from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 
-interface CircularProgressWithLabelProps extends CircularProgressProps {
-  value: number;
-}
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useUser } from "@clerk/nextjs";
+import { ShoppingCart } from "lucide-react";
 
-function CircularProgressWithLabel(props: CircularProgressWithLabelProps) {
-  // Change the color to green when progress is near 100, otherwise use MUI primary blue.
-  const progressColor = props.value >= 90 ? "green" : "#1976d2";
+export default function Loading() {
+  // Get the current user's info from Clerk
+  const { user } = useUser();
+  const username = user ? user.firstName || user.username || "Shopper" : "Shopper";
 
-  return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress
-        variant="determinate"
-        {...props}
-        sx={{ color: progressColor, ...props.sx }}
-      />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography
-          variant="caption"
-          component="div"
-          sx={{ color: "text.secondary", fontSize: "1.25rem", fontWeight: "bold" }}
-        >
-          {`${Math.round(props.value)}%`}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
+  // Create a progress state to simulate loading progress (numbering)
+  const [progress, setProgress] = useState(0);
 
-export default function CircularWithValueLabel() {
-  const [progress, setProgress] = React.useState(10);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((prevProgress) =>
-        prevProgress >= 100 ? 0 : prevProgress + 10
-      );
-    }, 800);
-    return () => {
-      clearInterval(timer);
-    };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // Increment progress until 100, then reset
+      setProgress((prev) => (prev >= 100 ? 0 : prev + 1));
+    }, 50); // Update every 50ms
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        bgcolor: "background.default",
-      }}
-    >
-      <CircularProgressWithLabel value={progress} size={150} />
-    </Box>
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gray-50 overflow-hidden">
+      {/* Pulsating Shopping Cart Icon (Background) */}
+      <motion.div
+        className="absolute text-gray-300"
+        style={{ fontSize: 200 }}
+        animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <ShoppingCart />
+      </motion.div>
+
+      {/* Rotating Spinner */}
+      <motion.div
+        className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full z-10"
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+      />
+
+      {/* Personalized Loading Message */}
+      <motion.h2
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="mt-4 text-2xl font-bold text-gray-800 z-10"
+      >
+        {`Hi ${username}, preparing your shopping experience...`}
+      </motion.h2>
+
+      {/* Animated Tagline */}
+      <motion.p
+        className="mt-2 text-lg text-gray-600 z-10"
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+      >
+        Finding the best products just for you!
+      </motion.p>
+
+      {/* Numbering / Progress Indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="mt-4 text-xl font-semibold text-gray-700 z-10"
+      >
+        {progress}% Complete
+      </motion.div>
+    </div>
   );
 }
