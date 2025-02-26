@@ -67,7 +67,7 @@ export default function ProductCard2({ product }: { product: Product }) {
                       src={image || "/placeholder.svg"}
                       alt={`${product.name} - Image ${index + 1}`}
                       fill
-                      className="object-cover"
+                      className="object-cover rounded-xl"
                       priority={index === 0}
                     />
                   </div>
