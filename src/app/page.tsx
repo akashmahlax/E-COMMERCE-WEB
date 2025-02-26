@@ -1,9 +1,6 @@
 // app/page.tsx
 import Link from "next/link";
-import { ShoppingCart, Search, User } from "lucide-react";
-import ProductCard from "@/components/ui/ProductCard";
 import AdminBtn from "@/components/adminbtn";
-import Navbar from "@/components/Navbar";
 import ProductCard2 from "@/components/card/card";
 
 // Force dynamic rendering since we're using a no-store fetch
@@ -34,7 +31,7 @@ export default async function Home() {
   return (
     
     <div className="min-h-screen pt-16 flex flex-col bg-gray-50">
-      <Navbar />
+      
       
 
       <main className="flex-1">
