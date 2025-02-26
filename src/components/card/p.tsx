@@ -13,7 +13,7 @@ interface Product {
   video?: string;
 }
 
-export default function ProductCard2({ product }: { product: Product }) {
+export default function ProductCard3({ product }: { product: Product }) {
   const router = useRouter();
 
   const handleBuyNow = () => {

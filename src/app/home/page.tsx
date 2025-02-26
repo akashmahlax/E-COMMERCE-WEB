@@ -5,7 +5,7 @@ import { ShoppingCart, Search, User } from "lucide-react";
 import ProductCard from "@/components/ui/ProductCard";
 import AdminBtn from "@/components/adminbtn";
 import Navbar from "@/components/Navbar";
-
+import ProductCard2 from "@/components/card/card";
 // Force dynamic rendering since we're using a no-store fetch
 export const dynamic = "force-dynamic";
 
@@ -81,7 +81,7 @@ export default async function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {products && products.length > 0 ? (
               products.slice(0, 3).map((product: any) => (
-                <ProductCard 
+                <ProductCard2 
                   key={product._id} 
                   product={product}
                   
@@ -149,7 +149,7 @@ export default async function Home() {
           {products && products.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.map((product: any) => (
-                <ProductCard
+                <ProductCard2
                   key={product._id}
                   product={product}
                   

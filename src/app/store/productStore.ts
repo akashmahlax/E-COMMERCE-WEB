@@ -1,15 +1,17 @@
-// store/productStore.ts
-import { create } from "zustand";
+// app/store/productStore.ts
+import { create } from 'zustand';
+
 interface Product {
-    _id: string;
-    name: string;
-    price: number;
-    images: string[];
-    video?: string;
-  }
+  _id: string;
+  name: string;
+  price: number;
+  imageUrls: string[];
+  videoUrl?: string;
+  description?: string; // Add description if needed
+}
 
 interface ProductState {
-  selectedProduct: Product; // Replace 'any' with your product type
+  selectedProduct: Product | null;
   setSelectedProduct: (product: Product) => void;
   clearSelectedProduct: () => void;
 }
