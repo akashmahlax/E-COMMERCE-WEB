@@ -16,8 +16,9 @@ import {
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "E-commerce website",
-  description: "Advanced e-commerce platform with admin panel",
+  title: "E-Shop",
+  description: "Shop any product you want online",
+  image: "/logo.jpg",
 }
 
 export default function RootLayout({
