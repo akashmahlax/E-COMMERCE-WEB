@@ -9,8 +9,8 @@ const razorpay = new Razorpay({
 export async function POST(req: Request) {
   // Define allowed origins
   const allowedOrigins = [
-    "http://localhost:3000",
     "https://admin-akash7.vercel.app",
+    "http://localhost:3000",
     "https://admin-six-khaki.vercel.app",
   ];
 
