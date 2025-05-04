@@ -4,8 +4,8 @@ import crypto from "crypto";
 import { NextResponse } from "next/server";
 
 const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+  key_secret: process.env.NEXT_PUBLIC_RAZORPAY_KEY_SECRET,
 });
 
 // List of allowed origins
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
   // Generate the expected signature
   const generated_signature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+    .createHmac("sha256", process.env.NEXT_PUBLIC_RAZORPAY_KEY_SECRET)
     .update(razorpay_order_id + "|" + razorpay_payment_id)
     .digest("hex");
 

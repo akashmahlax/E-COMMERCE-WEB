@@ -1,25 +1,32 @@
-// app/checkout/page.tsx
-"use client"; // Mark this as a Client Component
+"use client";
 
 import { useEffect } from "react";
 import Script from "next/script";
 import Image from "next/image";
-import { useProductStore } from "@/app/store/productStore"; // Zustand store for state management
-import { Button } from "@/components/ui/button"; // shadcn/ui Button
+import { useProductStore } from "@/app/store/productStore";
+import { Button } from "@/components/ui/button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"; // shadcn/ui Carousel
+} from "@/components/ui/carousel";
 
 export default function Checkout() {
-  const { selectedProduct } = useProductStore(); // Retrieve the selected product from Zustand store
+  const { selectedProduct } = useProductStore();
 
   const handlePayment = async () => {
-    const baseurl = process.env.NEXT_PUBLIC_API_URL;
     if (!selectedProduct) return;
+
+    const baseurl = process.env.NEXT_PUBLIC_API_URL;
+    const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+
+    if (!razorpayKey) {
+      console.error("Razorpay key is missing.");
+      alert("Razorpay key is not configured.");
+      return;
+    }
 
     const res = await fetch(`${baseurl}/api/rozarpay/order`, {
       method: "POST",
@@ -27,7 +34,7 @@ export default function Checkout() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: selectedProduct.price * 100, // Amount in paise
+        amount: selectedProduct.price * 100,
         currency: "INR",
       }),
     });
@@ -35,15 +42,14 @@ export default function Checkout() {
     const order = await res.json();
 
     const options = {
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key: razorpayKey,
       amount: order.amount,
       currency: order.currency,
       name: selectedProduct.name,
       description: selectedProduct.description || "Product Purchase",
       order_id: order.id,
       handler: async function (response: any) {
-        const baseurl = process.env.NEXT_PUBLIC_API_URL;
-        const result = await fetch(`${baseurl}/api/rozarpay/verify`, {
+        const verifyRes = await fetch(`${baseurl}/api/rozarpay/verify`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -51,12 +57,12 @@ export default function Checkout() {
           body: JSON.stringify(response),
         });
 
-        const data = await result.json();
+        const data = await verifyRes.json();
         if (data.success) {
           alert("Payment successful!");
-          window.location.href = "/success"; // Redirect to success page
+          window.location.href = "/success";
         } else {
-          alert("Payment failed!");
+          alert("Payment verification failed.");
         }
       },
       prefill: {
@@ -85,9 +91,7 @@ export default function Checkout() {
 
         {selectedProduct && (
           <div className="p-8">
-            {/* Product Details */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Image Carousel */}
               <div className="relative">
                 <Carousel className="w-full">
                   <CarouselContent>
@@ -110,24 +114,18 @@ export default function Checkout() {
                 </Carousel>
               </div>
 
-              {/* Product Info */}
               <div className="flex flex-col justify-between">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    {selectedProduct.name}
-                  </h2>
-                  <p className="text-gray-600 mt-2">
-                    {selectedProduct.description}
-                  </p>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedProduct.name}</h2>
+                  <p className="text-gray-600 mt-2">{selectedProduct.description}</p>
                   <p className="text-3xl font-bold text-green-600 mt-4">
-                    ${selectedProduct.price.toFixed(2)}
+                    ₹{selectedProduct.price.toFixed(2)}
                   </p>
                 </div>
 
-                {/* Payment Button */}
                 <Button
                   onClick={handlePayment}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition-all transform hover:scale-105"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 rounded-lg transition-all transform hover:scale-105 mt-6"
                 >
                   Pay Now
                 </Button>
@@ -138,7 +136,7 @@ export default function Checkout() {
       </main>
 
       {/* Razorpay Script */}
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
     </div>
   );
 }
